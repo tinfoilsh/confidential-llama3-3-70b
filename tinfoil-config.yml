@@ -1,0 +1,16 @@
+cvm-version: 0.0.19
+ovmf-version: 0.0.2
+cpus: 8
+memory: 32768
+
+models:
+  - id: llama3.3:70b
+    mpk: 7272277b9c507fc5d328cad4e14e8058e873eb5738857d9719dcdbf0873c3001-42520420352
+
+shim:
+  domains:
+    - llama3-3-70b.model.tinfoil.sh
+  listen-port: 443
+  upstream-port: 11434
+  paths:
+    - /v1/chat/completions
