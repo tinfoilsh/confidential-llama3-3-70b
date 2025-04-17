@@ -1,4 +1,4 @@
-cvm-version: 0.0.22
+cvm-version: 0.0.23
 ovmf-version: 0.0.2
 cpus: 8
 memory: 32768
@@ -17,3 +17,6 @@ shim:
   paths:
     - /v1/chat/completions
     - /metrics
+  origins:
+    - https://tinfoil.sh
+    - https://chat.tinfoil.sh
