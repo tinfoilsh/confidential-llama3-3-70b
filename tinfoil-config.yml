@@ -1,4 +1,4 @@
-cvm-version: 0.0.26
+cvm-version: 0.0.29
 ovmf-version: 0.0.2
 cpus: 8
 memory: 32768
@@ -20,3 +20,4 @@ shim:
   origins:
     - https://tinfoil.sh
     - https://chat.tinfoil.sh
+    - http://localhost:3000
