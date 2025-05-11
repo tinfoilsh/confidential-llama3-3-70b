@@ -7,7 +7,7 @@ models:
   - name: "llama3-3-70b"
     repo: "lambdalabs/Llama-3.3-70B-Instruct-AWQ-4bit@a70257cf10f368114a66115c315def76a1227e26"
     mpk: "06002d4871dbd882fc8b4c385e5181fdd85615e514f4efca3b6b3a3a774a36d2_39785426944_58b5d994-b471-58c9-8058-d224be115e1a"
-vllm-args: --quantization awq_marlin --max-model-len 65536
+vllm-args: --quantization awq_marlin --max-model-len 65536 --enable-auto-tool-choice --tool-call-parser llama3_json
 
 shim:
   domains:
