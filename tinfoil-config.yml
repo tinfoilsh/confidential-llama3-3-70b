@@ -14,6 +14,7 @@ shim:
   listen-port: 443
   upstream-port: 8080
   publish-attestation: true
+  tls-challenge: dns
   paths:
     - /v1/chat/completions
     - /metrics
