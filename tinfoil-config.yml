@@ -1,20 +1,36 @@
-shim-version: v0.2.9@sha256:cab643630f04d4d4d0a02d9d361fdf4a068c228c3f301b3e4d1c3b933310ad14
-cvm-version: 0.1.3
-ovmf-version: 0.0.2
-cpus: 8
-memory: 32768
+shim-version: v0.2.15@sha256:5ca748b384b78b7e686b57ca66d9b3c552038ebab2ce60305004f76e573a8458
+cvm-version: 0.5.8
+cpus: 16
+memory: 65536
 
 models:
-  - name: "llama-free"
-    repo: "lambdalabs/Llama-3.3-70B-Instruct-AWQ-4bit@a70257cf10f368114a66115c315def76a1227e26"
-    mpk: "06002d4871dbd882fc8b4c385e5181fdd85615e514f4efca3b6b3a3a774a36d2_39785426944_58b5d994-b471-58c9-8058-d224be115e1a"
-vllm-args: --quantization awq_marlin --max-model-len 65536 --enable-auto-tool-choice --tool-call-parser llama3_json --chat-template /etc/tinfoil/templates/tool_chat_template_llama3.1_json.jinja
+  - name: "llama3-3-70b-fp8"
+    repo: "RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic@984c96b73bcf6a675945bac6382b9ed551e5d42b"
+    mpk: "0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5_72687374336_99f5f660-3ee0-5626-9772-2f082314e763"
+
+containers:
+  - name: "llama3-3-70b-fp8-tp4"
+    image: ""
+    args: [
+      "--runtime", "nvidia",
+      "--gpus", "all",
+      "--ipc", "host",
+      "vllm/vllm-openai:v0.12.0@sha256:6766ce0c459e24b76f3e9ba14ffc0442131ef4248c904efdcbf0d89e38be01fe",
+      "--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5",
+      "--served-model-name", "llama3-3-70b",
+      "--enable-auto-tool-choice",
+      "--tool-call-parser", "llama3_json",
+      "--chat-template", "examples/tool_chat_template_llama3.2_json.jinja",
+      "--port", "8001"
+    ]
 
 shim:
   listen-port: 443
-  upstream-port: 8080
-  publish-attestation: false
+  upstream-port: 8001
+  publish-attestation: true
   tls-challenge: dns
+  control-plane: https://api.tinfoil.sh
   paths:
     - /v1/chat/completions
     - /metrics
+    - /health
