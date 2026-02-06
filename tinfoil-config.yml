@@ -1,5 +1,5 @@
-shim-version: v0.2.15@sha256:5ca748b384b78b7e686b57ca66d9b3c552038ebab2ce60305004f76e573a8458
-cvm-version: 0.5.8
+shim-version: v0.3.12@sha256:b81f2295ae6750d61e94f810ce24077360001b6ec795d13643f3170df29e304d
+cvm-version: 0.6.6
 cpus: 16
 memory: 65536
 
@@ -10,12 +10,11 @@ models:
 
 containers:
   - name: "llama3-3-70b-fp8-tp4"
-    image: ""
-    args: [
-      "--runtime", "nvidia",
-      "--gpus", "all",
-      "--ipc", "host",
-      "vllm/vllm-openai:v0.12.0@sha256:6766ce0c459e24b76f3e9ba14ffc0442131ef4248c904efdcbf0d89e38be01fe",
+    image: "vllm/vllm-openai:v0.12.0@sha256:6766ce0c459e24b76f3e9ba14ffc0442131ef4248c904efdcbf0d89e38be01fe"
+    runtime: nvidia
+    gpus: all
+    ipc: host
+    command: [
       "--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5",
       "--served-model-name", "llama3-3-70b",
       "--enable-auto-tool-choice",
@@ -27,9 +26,7 @@ containers:
 shim:
   listen-port: 443
   upstream-port: 8001
-  publish-attestation: true
-  tls-challenge: dns
-  control-plane: https://api.tinfoil.sh
+  authenticated: true
   paths:
     - /v1/chat/completions
     - /metrics
