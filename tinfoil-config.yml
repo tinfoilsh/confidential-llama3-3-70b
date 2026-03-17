@@ -1,7 +1,7 @@
-shim-version: v0.4.2@sha256:d65f769e37bbe86ffaeef42120c29c4b9de33415fcd7588a9ef7a64f609aa2a3
-cvm-version: 0.6.10
-cpus: 16
+cvm-version: 0.7.3
 memory: 65536
+cpus: 16
+gpus: 1
 
 models:
   - name: "llama3-3-70b-fp8"
@@ -10,12 +10,10 @@ models:
 
 containers:
   - name: "llama3-3-70b-fp8"
-    image: "vllm/vllm-openai:v0.16.0-cu130@sha256:9e6e8a306b46b249d637d6da056753fd258f89ad84bf0e12afc579124571288e"
+    image: "vllm/vllm-openai:v0.17.1-cu130@sha256:bbeaaf81ba5704c30f6b87a5df5b10b930d97e916fc98c825d3ad30806e9638b"
     runtime: nvidia
     gpus: all
     ipc: host
-    env:
-      - LD_LIBRARY_PATH: "/usr/local/nvidia/lib64:/usr/local/nvidia/lib:/usr/lib/x86_64-linux-gnu"
     command: [
       "--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5",
       "--served-model-name", "llama3-3-70b",
@@ -27,7 +25,6 @@ containers:
     ]
 
 shim:
-  listen-port: 443
   upstream-port: 8001
   paths:
     - /v1/chat/completions
