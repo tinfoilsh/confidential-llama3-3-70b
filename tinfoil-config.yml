@@ -26,6 +26,9 @@ containers:
 
 shim:
   upstream-port: 8001
+  authenticated: true
+  authenticated-endpoints:
+    - /v1/chat/completions
   paths:
     - /v1/chat/completions
     - /metrics
