@@ -1,4 +1,4 @@
-cvm-version: 0.7.3
+cvm-version: 0.10.2
 memory: 65536
 cpus: 16
 gpus: 1
@@ -10,10 +10,16 @@ models:
 
 containers:
   - name: "llama3-3-70b-fp8"
-    image: "vllm/vllm-openai:v0.17.1-cu130@sha256:bbeaaf81ba5704c30f6b87a5df5b10b930d97e916fc98c825d3ad30806e9638b"
+    image: "vllm/vllm-openai:v0.22.0@sha256:0fec7ec5f3e6bc168e54899935fb0557da908a4832a1dbc88e2debcf2f889416"
     runtime: nvidia
     gpus: all
     ipc: host
+    restart: always
+    read_only: false
+    cap_add:
+      - IPC_LOCK
+      - SYS_RESOURCE
+      - SYS_NICE
     command: [
       "--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5",
       "--served-model-name", "llama3-3-70b",
@@ -23,6 +29,14 @@ containers:
       "--scheduling_policy", "priority",
       "--port", "8001"
     ]
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30m
+    tmpfs:
+      /tmp: size=512m,mode=1777,exec
+      /root: size=2g,mode=0700,exec
 
 shim:
   upstream-port: 8001
