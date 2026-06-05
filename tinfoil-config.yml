@@ -1,6 +1,6 @@
-cvm-version: 0.10.2
-memory: 65536
+cvm-version: 0.10.4
 cpus: 16
+memory: 65536
 gpus: 1
 
 models:
@@ -13,30 +13,20 @@ containers:
     image: "vllm/vllm-openai:v0.22.0@sha256:0fec7ec5f3e6bc168e54899935fb0557da908a4832a1dbc88e2debcf2f889416"
     runtime: nvidia
     gpus: all
-    ipc: host
     restart: always
-    read_only: false
-    cap_add:
-      - IPC_LOCK
-      - SYS_RESOURCE
-      - SYS_NICE
-    command: [
-      "--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5",
-      "--served-model-name", "llama3-3-70b",
-      "--enable-auto-tool-choice",
-      "--tool-call-parser", "llama3_json",
-      "--chat-template", "examples/tool_chat_template_llama3.2_json.jinja",
-      "--scheduling_policy", "priority",
-      "--port", "8001"
-    ]
+    env:
+      - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+    command: ["--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5", "--served-model-name",
+      "llama3-3-70b", "--enable-auto-tool-choice", "--tool-call-parser", "llama3_json", "--chat-template", "examples/tool_chat_template_llama3.2_json.jinja",
+      "--scheduling-policy", "priority", "--port", "8001"]
+    tmpfs:
+      /tmp: size=512m,mode=1777,exec
+      /root: size=2g,mode=0700,exec
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:8001/health"]
       interval: 30s
       timeout: 5s
       start_period: 30m
-    tmpfs:
-      /tmp: size=512m,mode=1777,exec
-      /root: size=2g,mode=0700,exec
 
 shim:
   upstream-port: 8001
