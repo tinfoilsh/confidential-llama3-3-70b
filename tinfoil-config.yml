@@ -33,8 +33,10 @@ shim:
   authenticated: true
   authenticated-endpoints:
     - /v1/chat/completions
+    - /tokenize
     - /metrics
   paths:
     - /v1/chat/completions
+    - /tokenize
     - /metrics
     - /health
