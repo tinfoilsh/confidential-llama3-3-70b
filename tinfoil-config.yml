@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: "llama3-3-70b-fp8"
-    image: "vllm/vllm-openai:v0.22.0@sha256:0fec7ec5f3e6bc168e54899935fb0557da908a4832a1dbc88e2debcf2f889416"
+    image: "ghcr.io/tinfoilsh/confidential-llama3-3-70b@sha256:0000000000000000000000000000000000000000000000000000000000000000"
     runtime: nvidia
     gpus: all
     restart: always
@@ -18,7 +18,7 @@ containers:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
     command: ["--model", "/tinfoil/mpk/mpk-0d0be05062e4d3fadc17176cffd1ef6b518a02b0410bd897723f423074ec6cb5", "--served-model-name",
       "llama3-3-70b", "--enable-auto-tool-choice", "--tool-call-parser", "llama3_json", "--chat-template", "examples/tool_chat_template_llama3.2_json.jinja",
-      "--scheduling-policy", "priority", "--port", "8001"]
+      "--scheduling-policy", "priority", "--enable-force-include-usage", "--middleware", "tinfoil_usage.UsageMetricsMiddleware", "--enable-prompt-tokens-details", "--port", "8001"]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
       /root: size=2g,mode=0700,exec
