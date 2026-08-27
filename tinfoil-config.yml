@@ -10,7 +10,7 @@ models:
 
 containers:
   - name: "llama3-3-70b-fp8"
-    image: "ghcr.io/tinfoilsh/confidential-llama3-3-70b@sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    image: "ghcr.io/tinfoilsh/confidential-llama3-3-70b@sha256:803dc4b2070c97c52065b828c53c4570b024e41b64d0a90194734f03d603a8eb" # v0.0.27
     runtime: nvidia
     gpus: all
     restart: always
